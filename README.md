@@ -5,7 +5,7 @@
 ### TP1 - Créer un service pour la gestion d’utilisateurs
 
 1.Compléter le modèle pour les utilisateurs
-- [ ] Avec le rôle et d’autres attributs de base.
+- [x] Avec le rôle et d’autres attributs de base.
 2. Mettre en place un système de rôles avec les droits suivants : 
 - [ ] Admin → a accès à toutes les fonctionnalitées 
 - [ ] Player → peut s’enregistrer et consulter ses informations mais pas celles des autres utilisateurs; il peut juste voir leur noms. Un utilisateur de type player peut avoir 0, 1 ou plusieurs badges (récompenses)
@@ -14,11 +14,11 @@
 - [x] Création d’un utilisateur avec un email + mot de passe avec un payload JSON
 - [x] Mettre à jour les informations d’un utilisateur avec un payload JSON
 - [ ] Effacer un utilisateur en mode soft-delete (on le garde en BD mais il n’est plus visible)
-- [ ] Listing des utilisateurs
+- [x] Listing des utilisateurs
 - [ ] Ajouter un paramètre pour voir les utilisateurs effacés (seulement disponible pour le rôle Admin)
 - [x] Trouver un utilisateur par son id : GET users/123
 - [x] Trouver un utilisateur par son nom : GET users?name=toto
-- [ ] Gérer correctement les erreurs (retourner les bons codes HTTP)
+- [x] Gérer correctement les erreurs (retourner les bons codes HTTP)
 
 ### TP2
 

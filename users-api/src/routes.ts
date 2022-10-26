@@ -18,7 +18,9 @@ export const register = (app: express.Application) => {
 
   app.get("/users/:id", (req, res) => {
     const userId = Number(req.params.id);
-    res.status(200).json(UserController.findUser(userId));
+    const user = UserController.findUser(userId);
+    if (user !== undefined) res.status(200).json(user);
+    else res.status(404).send();
   });
 
   app.post("/users", (req, res) => {
@@ -34,19 +36,23 @@ export const register = (app: express.Application) => {
         return;
       } else {
         // pass 'user' object to repository/service
-        res.status(200).json(UserController.addUser(user));
+        res.status(201).json(UserController.addUser(user));
       }
     });
   });
 
   app.delete("/users/:id", (req, res) => {
     const userId = Number(req.params.id);
-    res.status(200).json(UserController.deleteUser(userId));
+    const user = UserController.deleteUser(userId);
+    if (user !== undefined) res.status(200).json(user);
+    else res.status(404).send();
   });
 
   app.put("/users/:id", (req, res) => {
     const userId = Number(req.params.id);
     const toUpdate = req.body;
-    res.status(200).json(UserController.updateUser(userId, toUpdate));
+    const user = UserController.updateUser(userId, toUpdate);
+    if (user !== undefined) res.status(200).json(user);
+    else res.status(404).send();
   });
 };
