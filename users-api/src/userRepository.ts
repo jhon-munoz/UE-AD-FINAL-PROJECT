@@ -30,13 +30,18 @@ export default class UserRepository {
     }
   }
 
-  getAllUsers(): User[] {
-    const statement = this.db.prepare("SELECT * FROM users");
+  getAllUsers(include_deleted: boolean = false): User[] {
+    const statement = this.db.prepare(
+      "SELECT * FROM users" + (!include_deleted ? " WHERE NOT is_deleted" : "")
+    );
     return statement.all() as User[];
   }
 
-  getUserById(userId: number): User {
-    const statement = this.db.prepare("SELECT * FROM users WHERE user_id = ?");
+  getUserById(userId: number, include_deleted: boolean = false): User {
+    const statement = this.db.prepare(
+      "SELECT * FROM users WHERE user_id = ?" +
+        (!include_deleted ? " AND NOT is_deleted" : "")
+    );
     return statement.get(userId) as User;
   }
 
@@ -46,7 +51,9 @@ export default class UserRepository {
   }
 
   deleteUserById(userId: number): void {
-    this.db.prepare("DELETE FROM users WHERE user_id = ?").run(userId);
+    this.db
+      .prepare("UPDATE users SET is_deleted = TRUE WHERE user_id = ?")
+      .run(userId);
   }
 
   updateUser(user: User): void {

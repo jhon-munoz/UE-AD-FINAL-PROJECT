@@ -13,7 +13,7 @@
 3. Implementer les endpoints
 - [x] Création d’un utilisateur avec un email + mot de passe avec un payload JSON
 - [x] Mettre à jour les informations d’un utilisateur avec un payload JSON
-- [ ] Effacer un utilisateur en mode soft-delete (on le garde en BD mais il n’est plus visible)
+- [x] Effacer un utilisateur en mode soft-delete (on le garde en BD mais il n’est plus visible)
 - [x] Listing des utilisateurs
 - [ ] Ajouter un paramètre pour voir les utilisateurs effacés (seulement disponible pour le rôle Admin)
 - [x] Trouver un utilisateur par son id : GET users/123
