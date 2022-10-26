@@ -1,4 +1,4 @@
-import { User, Admin, Player, Reporter } from "./model";
+import { User } from "./model";
 import UserRepository from "./userRepository";
 
 const userRepository = new UserRepository();
@@ -23,7 +23,7 @@ const updateUser = (userId: number, toUpdate: any): User => {
   Object.keys(toUpdate)
     .filter((key) => Object.keys(user).includes(key))
     .every((key) => (user[key] = toUpdate[key]));
-  // TODO: userRepository.getUserById(newUser.id);
+  userRepository.updateUser(user);
   return user as User;
 };
 

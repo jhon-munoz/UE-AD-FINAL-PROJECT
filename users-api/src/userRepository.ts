@@ -49,10 +49,10 @@ export default class UserRepository {
     this.db.prepare("DELETE FROM users WHERE user_id = ?").run(userId);
   }
 
-  updateUser(id: number, name: string, score: number) {
-    const statement = this.db.prepare(
-      `UPDATE users SET name='${name}', score=${score} WHERE user_id=${id}`
-    );
-    return statement.run();
+  updateUser(user: User): void {
+    console.log(user);
+    this.db
+      .prepare("UPDATE users SET name = ? WHERE user_id = ?")
+      .run(user.name, user.user_id);
   }
 }
