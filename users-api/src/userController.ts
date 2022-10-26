@@ -1,43 +1,30 @@
-import { User } from './model'
-import UserRepository from './userRepository'
+import { User, Admin, Player, Reporter } from "./model";
+import UserRepository from "./userRepository";
 
-/*const typedUsers: User[] = []
+const userRepository = new UserRepository();
 
-const listUsers = () => typedUsers
+const listUsers = (): User[] => userRepository.getAllUsers();
 
-const addUser = (newUser: User) => {
-    typedUsers.push(newUser)
-    return typedUsers
-}*/
+const addUser = (newUser: Omit<User, "id">): User => {
+  const userId = userRepository.createUser(newUser.name);
+  return userRepository.getUserById(userId);
+};
 
-// TODO: implement and export
-// function findUser (userId: number): User { //@todo }
+const deleteUser = (userId: number): User => {
+  const user = findUser(userId);
+  userRepository.deleteUserById(userId);
+  return user;
+};
 
-const userRepository = new UserRepository()
+const findUser = (userId: number): User => userRepository.getUserById(userId);
 
-const listUsers = () => {
-    return userRepository.getAllUsers()
-}
+const updateUser = (userId: number, toUpdate: any): User => {
+  let user = findUser(userId) as any;
+  Object.keys(toUpdate)
+    .filter((key) => Object.keys(user).includes(key))
+    .every((key) => (user[key] = toUpdate[key]));
+  // TODO: userRepository.getUserById(newUser.id);
+  return user as User;
+};
 
-const findUser= (userId: number) => {
-    return userRepository.getUserById(userId)
-}
-
-const addUser = (newUser: User) => {
-    userRepository.createUser(newUser.name)
-    return userRepository.getAllUsers()
-}
-
-const updateUser = (newUser: User) => {
-    userRepository.updateUser(
-        newUser.id, newUser.name, newUser.score
-    )
-    return userRepository.getUserById(newUser.id)
-}
-
-const deleteUser= (userId: number) => {
-    return userRepository.deleteUser(userId)
-}
-
-
-export { listUsers, addUser, findUser, updateUser, deleteUser }
+export { listUsers, addUser, deleteUser, findUser, updateUser };
