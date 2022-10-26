@@ -1,20 +1,18 @@
-# version: '3.8'
-
-# services:
-#   ts:
-#     image: otramaga/imt-microservices:ts
-#     volumes:
-#       - ./:/app
-#     stdin_open: true
-#     tty: true 
-#     command: bash
-
 version: '3.8'
 
 services:
-  ts:
-    build:
-      context: .
+  users-api:
+    build: ./users-api
+    ports:
+      - "50001:5000"
     volumes:
-      - ./:/app
-    command: bash
+      - ./users-api:/app
+    command: npm start
+  auth:
+    build: ./auth-api
+    ports:
+      - "5002:5000"
+    volumes:
+      - ./auth-api:/app
+    depends_on:
+      - users-api
