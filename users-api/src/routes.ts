@@ -1,6 +1,8 @@
 import * as express from "express";
 import * as UserController from "./userController";
-import { User } from "./model";
+import { UserPost } from "./payloads";
+import { validate } from "class-validator";
+import { plainToClass } from "class-transformer";
 
 export const register = (app: express.Application) => {
   app.get("/", (req, res) => res.send("Hello World!"));
@@ -20,8 +22,21 @@ export const register = (app: express.Application) => {
   });
 
   app.post("/users", (req, res) => {
-    const newUser: Omit<User, "id"> = req.body;
-    res.status(200).json(UserController.addUser(newUser));
+    const user = plainToClass(UserPost, req.body);
+    validate(user).then((errors) => {
+      // errors is an array of validation errors
+      if (errors.length > 0) {
+        let errorTexts = Array();
+        for (const errorItem of errors) {
+          errorTexts = errorTexts.concat(errorItem.constraints);
+        }
+        res.status(400).send(errorTexts);
+        return;
+      } else {
+        // pass 'user' object to repository/service
+        res.status(200).json(UserController.addUser(user));
+      }
+    });
   });
 
   app.delete("/users/:id", (req, res) => {

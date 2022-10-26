@@ -11,8 +11,8 @@
 - [ ] Player → peut s’enregistrer et consulter ses informations mais pas celles des autres utilisateurs; il peut juste voir leur noms. Un utilisateur de type player peut avoir 0, 1 ou plusieurs badges (récompenses)
 - [ ] Reporter → a accès à toutes les informations mais en lecture seule 
 3. Implementer les endpoints
-- [ ] Création d’un utilisateur avec un email + mot de passe avec un payload JSON
-- [ ] Mettre à jour les informations d’un utilisateur avec un payload JSON
+- [x] Création d’un utilisateur avec un email + mot de passe avec un payload JSON
+- [x] Mettre à jour les informations d’un utilisateur avec un payload JSON
 - [ ] Effacer un utilisateur en mode soft-delete (on le garde en BD mais il n’est plus visible)
 - [ ] Listing des utilisateurs
 - [ ] Ajouter un paramètre pour voir les utilisateurs effacés (seulement disponible pour le rôle Admin)

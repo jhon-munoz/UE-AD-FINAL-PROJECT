@@ -1,12 +1,13 @@
 import { User } from "./model";
+import { UserPost } from "./payloads";
 import UserRepository from "./userRepository";
 
 const userRepository = new UserRepository();
 
 const listUsers = (): User[] => userRepository.getAllUsers();
 
-const addUser = (newUser: Omit<User, "id">): User => {
-  const userId = userRepository.createUser(newUser.name);
+const addUser = (user: UserPost): User => {
+  const userId = userRepository.createUser(user.name);
   return userRepository.getUserById(userId);
 };
 
