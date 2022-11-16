@@ -1,0 +1,185 @@
+openapi: 3.0.0
+servers: []
+
+info:
+  description: Poke-fu-mi matches service
+  version: "1.0.0"
+  title: Matches API
+  license:
+    name: GPL v3
+    url: "https://www.gnu.org/licenses/gpl-3.0.en.html"
+
+tags:
+  - name: player
+  - name: admin
+  - name: reporter
+
+paths:
+  /invites:
+    post:
+      tags:
+        - player
+      summary: Create invite
+      description: Create invite for a new match
+      operationId: create_invite
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                opponent:
+                  description: opponent's username
+      responses:
+        "200":
+          description: Invite sent
+  /invites/{username}:
+    get:
+      tags:
+        - player
+      summary: Get player invites
+      operationId: get_player_invites
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Invites list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Invite"
+
+  /matches:
+    get:
+      summary: Get list of matches
+      operationId: get_matches
+      parameters:
+        - in: query
+          name: state
+          description: filter output list by match state
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: player
+          description: filter output list by player matches
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: matches list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Match"
+    post:
+      summary: Create a new match
+      operationId: create_match
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                players:
+                  type: array
+                  items:
+                    type: string
+                pokemon:
+                  type: array
+                  items:
+                    type: array
+                    items:
+                      type: string
+      responses:
+        "201":
+          description: match created
+  /matches/{id}:
+    get:
+      summary: Get match info
+      operationId: get_match
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Match"
+
+    put:
+      summary: Update a match
+      operationId: update_match
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: match updated
+
+components:
+  schemas:
+    Match:
+      type: object
+      required:
+        - id
+        - state
+        - players
+        - creation
+        - start
+        - end
+        - winner
+      properties:
+        id:
+          type: string
+        state:
+          type: string
+        current_round:
+          type: integer
+          minimum: 0
+          maximum: 6
+        players:
+          type: array
+          items:
+            type: string
+        creation:
+          type: string
+          format: date-time
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+        winner:
+          type: string
+    Invite:
+      type: object
+      properties:
+        creator:
+          type: string
+        creation:
+          type: string
+          format: date-time
