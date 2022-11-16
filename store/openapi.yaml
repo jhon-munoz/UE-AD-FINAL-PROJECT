@@ -1,0 +1,113 @@
+openapi: 3.0.0
+servers: []
+
+info:
+  description: Poke-fu-mi store service
+  version: "1.0.0"
+  title: Store API
+  license:
+    name: GPL v3
+    url: "https://www.gnu.org/licenses/gpl-3.0.en.html"
+
+paths:
+  /purchase:
+    post:
+      summary: User makes a purchase
+      operationId: purchase
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - token
+                - pokemon
+              properties:
+                username:
+                  type: string
+                token:
+                  type: string
+                pokemon:
+                  description: bought pokemon id
+                  type: string
+      responses:
+        "200":
+          description: Purchase made
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  new_balance:
+                    type: number
+  /balance/{username}:
+    put:
+      summary: Update user balance
+      operationId: update_balance
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: balance updated
+    get:
+      summary: Get user balance
+      operationId: get_balance
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "ok"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  balance:
+                    type: number
+  /pokemon:
+    get:
+      summary: List of pokemon for sale
+      operationId: get_pokemon
+      responses:
+        "200":
+          description: List of pokemon for sale
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    price:
+                      type: number
+  /pokemon/{username}:
+    get:
+      summary: List of pokemon of a user
+      operationId: get_user_pokemon
+      responses:
+        "200":
+          description: List of pokemon of a user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
