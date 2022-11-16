@@ -9,9 +9,16 @@ info:
     name: GPL v3
     url: "https://www.gnu.org/licenses/gpl-3.0.en.html"
 
+tags:
+  - name: player
+  - name: admin
+  - name: reporter
+
 paths:
   /purchase:
     post:
+      tags:
+        - player
       summary: User makes a purchase
       operationId: purchase
       requestBody:
@@ -75,6 +82,8 @@ paths:
                     type: number
   /pokemon:
     get:
+      tags:
+        - player
       summary: List of pokemon for sale
       operationId: get_pokemon
       responses:
@@ -97,6 +106,12 @@ paths:
     get:
       summary: List of pokemon of a user
       operationId: get_user_pokemon
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: List of pokemon of a user

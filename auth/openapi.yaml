@@ -9,6 +9,11 @@ info:
     name: GPL v3
     url: "https://www.gnu.org/licenses/gpl-3.0.en.html"
 
+tags:
+  - name: player
+  - name: admin
+  - name: reporter
+
 paths:
   /authenticate:
     post:
@@ -61,6 +66,7 @@ components:
           $ref: "#/components/schemas/username"
         password:
           type: string
+          format: password
           example: S!F4Q+rhtWx
     UserContext:
       type: object

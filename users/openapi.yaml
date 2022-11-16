@@ -9,9 +9,16 @@ info:
     name: GPL v3
     url: "https://www.gnu.org/licenses/gpl-3.0.en.html"
 
+tags:
+  - name: player
+  - name: admin
+  - name: reporter
+
 paths:
   /users:
     get:
+      tags:
+        - player
       summary: get the full users database
       operationId: get_users
       responses:
@@ -23,6 +30,8 @@ paths:
                 $ref: "#/components/schemas/AllUsers"
   /users/{username}:
     get:
+      tags:
+        - player
       summary: get the user by name
       operationId: get_user_by_name
       parameters:
@@ -41,6 +50,8 @@ paths:
         "404":
           description: User not found
     post:
+      tags:
+        - player
       summary: add a user item
       operationId: create_user
       description: Adds a user to the system
@@ -72,6 +83,8 @@ paths:
                   example: Peter Curley
         description: Inventory item to add
     put:
+      tags:
+        - player
       summary: update a user item
       operationId: create_user
       description: Adds a user to the system
@@ -99,6 +112,12 @@ paths:
                 name:
                   type: string
                   example: Peter Curley
+  /session:
+    post:
+      summary: Start a session
+      responses:
+        "200":
+          description: Connected succesfully
 
 components:
   schemas:
