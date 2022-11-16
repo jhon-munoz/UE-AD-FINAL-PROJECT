@@ -1,0 +1,75 @@
+openapi: 3.0.0
+servers: []
+
+info:
+  description: Poke-fu-mi authentication service
+  version: "1.0.0"
+  title: Auth API
+  license:
+    name: GPL v3
+    url: "https://www.gnu.org/licenses/gpl-3.0.en.html"
+
+paths:
+  /authenticate:
+    post:
+      summary: Authentication endpoint
+      description: Gets user information to generate a token
+      operationId: authenticate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthenticationInput"
+      responses:
+        "200":
+          description: User token
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "token"
+  /user-context:
+    get:
+      summary: Decodes token to extract user information
+      operationId: user-context
+      parameters:
+        - in: query
+          name: token
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: user information
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserContext"
+
+components:
+  schemas:
+    username:
+      type: string
+      example: peter_curley
+    AuthenticationInput:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          $ref: "#/components/schemas/username"
+        password:
+          type: string
+          example: S!F4Q+rhtWx
+    UserContext:
+      type: object
+      required:
+        - username
+        - role
+      properties:
+        username:
+          $ref: "#/components/schemas/username"
+        role:
+          type: string
+          example: admin
