@@ -1,0 +1,122 @@
+openapi: 3.0.0
+servers: []
+
+info:
+  description: Poke-fu-mi users service
+  version: "1.0.0"
+  title: User API
+  license:
+    name: GPL v3
+    url: "https://www.gnu.org/licenses/gpl-3.0.en.html"
+
+paths:
+  /users:
+    get:
+      summary: get the full users database
+      operationId: get_users
+      responses:
+        "200":
+          description: all users
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AllUsers"
+  /users/{username}:
+    get:
+      summary: get the user by name
+      operationId: get_user_by_name
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User description
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserItem"
+        "404":
+          description: User not found
+    post:
+      summary: add a user item
+      operationId: create_user
+      description: Adds a user to the system
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserItem"
+        "409":
+          description: an existing item already exists
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  example: Peter Curley
+        description: Inventory item to add
+    put:
+      summary: update a user item
+      operationId: create_user
+      description: Adds a user to the system
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserItem"
+        "404":
+          description: User not found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Peter Curley
+
+components:
+  schemas:
+    AllUsers:
+      type: object
+      required:
+        - users
+      properties:
+        users:
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/UserItem"
+    UserItem:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: Peter Curley
