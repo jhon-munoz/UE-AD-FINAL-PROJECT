@@ -1,6 +1,8 @@
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 
-from routers import balance, pokemon
+from routers import balance, pokemon, purchase
+from errors import NotFound
 
 store = FastAPI(
     title='Poke-Fu-Mi Store Service',
@@ -8,8 +10,9 @@ store = FastAPI(
 )
 store.include_router(balance.router)
 store.include_router(pokemon.router)
+store.include_router(purchase.router)
 
 
-@store.get('/')
-async def root():
-    return {'message': 'Hello World'}
+@store.exception_handler(NotFound)
+def not_found_exception_handler(_, __):
+    return JSONResponse("Not Found", 404)
