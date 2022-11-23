@@ -6,6 +6,12 @@ services:
       - "27017"
     volumes:
       - ./store/data/mongo:/data/db
+  mongoku:
+    image: huggingface/mongoku
+    ports:
+      - "3100:3100"
+    environment:
+      - MONGOKU_DEFAULT_HOST=mongodb://mongo:27017/
   store:
     build: ./store
     ports:
