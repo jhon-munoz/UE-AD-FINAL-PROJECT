@@ -6,22 +6,24 @@ client = MongoClient(host='mongo', port=27017)
 client.server_info()
 db = client['matches']
 match_collection = db['match']
-match_collection.create_index([('id', ASCENDING)], unique=True)
+# match_collection.create_index([('id', ASCENDING)], unique=True)
+
+def get_all_match() -> list[Match]:
+    return [
+        Match(**p)
+        for p in match_collection.find()
+    ]
 
 def get_match(id: str) -> Match:
-    result = match_collection.find_one({'id': id},
-                                         projection={'_id': False})
+    result = match_collection.find_one({'id': id})
     if result is None:
         raise NotFound()
     return Match(**result)
 
-def get_match_list() -> list[Match]:
-    return [
-        Match(**p)
-        for p in match_collection.find(projection={'_id': False})
-    ]
+def add_match(match: Match)-> None:
+    match_collection.insert_one(dict(match))
 
-def add_match(match: Match) -> None:
+def update_match(match: Match) -> None:
     match_collection.update_one(
         {'id': f'{match.id}'}, {'$set': match.dict()},
         upsert=True)

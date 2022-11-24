@@ -1,7 +1,6 @@
 from pydantic import BaseModel
 
 class Match(BaseModel):
-    id: str
     player1: str
     player2: str
     status: str
