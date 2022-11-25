@@ -1,6 +1,8 @@
 from pymongo import MongoClient, ASCENDING
 from models import Match
 from errors import NotFound
+from bson import ObjectId
+from schemas import serializeDict, serializeList
 
 client = MongoClient(host='mongo', port=27017)
 client.server_info()
@@ -9,76 +11,23 @@ match_collection = db['match']
 # match_collection.create_index([('id', ASCENDING)], unique=True)
 
 def get_all_match() -> list[Match]:
-    return [
-        Match(**p)
-        for p in match_collection.find()
-    ]
+    return serializeList(match_collection.find())
 
 def get_match(id: str) -> Match:
-    result = match_collection.find_one({'id': id})
+    result = match_collection.find_one({'_id': ObjectId(id)})
     if result is None:
         raise NotFound()
-    return Match(**result)
+    return serializeDict(result)
 
 def add_match(match: Match)-> None:
     match_collection.insert_one(dict(match))
 
-def update_match(match: Match) -> None:
-    match_collection.update_one(
-        {'id': f'{match.id}'}, {'$set': match.dict()},
-        upsert=True)
+def update_match(id, match: Match) -> None:
+    match_collection.find_one_and_update(
+        {'_id': ObjectId(id)}, {'$set': dict(match)})
+
+def delete_match(id):
+    return match_collection.find_one_and_delete(
+        {"_id":ObjectId(id)})
 
 
-
-# def get_pokemon_by_id(id_: str) -> Pokemon:
-#     result = pokemon_store_collection.find_one({'id': id_},
-#                                                projection={'_id': False})
-#     if result is None:
-#         raise NotFound()
-#     return Pokemon(**result)
-#
-#
-# def get_user_pokemon(name: str) -> UserPokemon:
-#     result = pokemon_storage_collection.find_one({'user': name},
-#                                                  projection={'_id': False})
-#     if result is None:
-#         raise NotFound()
-#     return UserPokemon(**result)
-#
-#
-# def get_pokemon_for_sale() -> list[Pokemon]:
-#     return [
-#         Pokemon(**p)
-#         for p in pokemon_store_collection.find(projection={'_id': False})
-#     ]
-#
-#
-# def add_pokemon_for_sale(pokemon: PokemonAdd) -> None:
-#     pokemon_store_collection.update_one(
-#         {'id': f'{pokemon.name}_{pokemon.level}'}, {'$set': pokemon.dict()},
-#         upsert=True)
-#
-#
-# def remove_pokemon_for_sale(id_: str) -> None:
-#     pokemon_store_collection.delete_one({'id': id_})
-#
-#
-# def add_user_pokemon(name: str, pokemon: PokemonAdd):
-#     pokemon_storage_collection.update_one({'user': name}, {
-#         '$push': {
-#             'pokemon':
-#                 pokemon.dict() | {
-#                     'id': f'{pokemon.name}_{pokemon.level}'
-#                 }
-#         }
-#     },
-#                                           upsert=True)
-#
-#
-# def remove_user_pokemon(name: str, id_: str):
-#     pokemon_storage_collection.update_one({'user': name},
-#                                           {'$pull': {
-#                                               'pokemon': {
-#                                                   'id': id_
-#                                               }
-#                                           }})
