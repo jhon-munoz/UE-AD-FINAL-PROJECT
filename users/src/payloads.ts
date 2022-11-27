@@ -1,11 +1,11 @@
-import { Length, IsEmail, IsAlphanumeric, IsIn } from "class-validator";
-
-export class UserCreation {
-  @IsAlphanumeric()
-  @Length(2, 20)
-  name: string;
-  @IsEmail()
-  email: string;
-  @IsIn(["admin", "player", "reporter"])
-  role: "admin" | "player" | "reporter";
-}
+import { String, Literal, Record, Union } from "runtypes";
+export const UserCreation = Record({
+  name: String,
+  email: String,
+  password: String,
+  role: Union(Literal("admin"), Literal("player"), Literal("reporter")),
+});
+export const UserLogin = Record({
+  name: String,
+  password: String,
+});

@@ -12,6 +12,10 @@ services:
       - "3100:3100"
     environment:
       - MONGOKU_DEFAULT_HOST=mongodb://mongo:27017/
+  auth:
+    build: ./auth
+    ports:
+      - "8001:80"
   users:
     build: ./users
     ports:

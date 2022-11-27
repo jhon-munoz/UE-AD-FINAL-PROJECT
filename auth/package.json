@@ -1,32 +1,24 @@
 {
-  "name": "users",
+  "name": "auth",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
-  "type": "module",
   "scripts": {
     "prebuild": "rm -rf dist/*",
     "build": "tsc && cp -rf package.json dist/package.json",
     "prestart": "npm run build",
-    "start": "ts-node .",
-    "watch": "nodemon --ext ts,js,mjs,json src/index.ts"
+    "start": "ts-node ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "connect-livereload": "^0.6.1",
-    "livereload": "^0.9.3",
-    "nodemon": "^2.0.20"
-  },
+  "devDependencies": {},
   "dependencies": {
+    "@types/jsonwebtoken": "^8.5.9",
     "@types/express": "^4.17.14",
-    "@types/validator": "^13.7.10",
     "express": "^4.18.2",
-    "got": "^12.5.3",
-    "mongodb": "^4.12.1",
-    "runtypes": "^6.6.0",
+    "jsonwebtoken": "^8.5.1",
     "ts-node": "^10.9.1",
-    "typescript": "^4.9.3"
+    "typescript": "^4.8.4"
   }
 }

@@ -1,56 +1,93 @@
 import * as express from "express";
-import UserController from "./userController";
-import { UserCreation } from "./payloads";
-import { validate } from "class-validator";
-import { plainToClass } from "class-transformer";
+import UserController from "./userController.js";
+import { UserCreation, UserLogin } from "./payloads.js";
 
 const controller = new UserController();
 
 export const register = (app: express.Application) => {
   app.get("/", async (_req, res) => res.send("Hello World!"));
 
+  app.post("/login", async (req, res) => {
+    try {
+      const userLogin = UserLogin.check(req.body);
+      const token = await controller.getUserToken(userLogin);
+      if (token !== "") res.status(200).send(token);
+      res.status(422).send();
+    } catch (err) {
+      res.status(400).send(err.details);
+    }
+  });
+
   app.get("/users", async (req, res) => {
-    const users = await controller.getAllUsers(
-      Boolean(req.query.include_deleted)
-    );
+    if (req.query.token === undefined) {
+      res.status(403).send();
+      return;
+    }
+    const include_deleted =
+      (await controller.getRoleFromToken(req.query.token.toString())) ===
+        "admin" && Boolean(req.query.include_deleted);
+    const users = await controller.getAllUsers(include_deleted);
     res.status(200).json(users);
   });
 
   app.get("/users/:name", async (req, res) => {
     const username = req.params.name;
-    const user = await controller.getUserByName(
-      username,
-      Boolean(req.query.include_deleted)
-    );
+    if (
+      req.query.token === undefined ||
+      ((await controller.getRoleFromToken(req.query.token.toString())) !==
+        "admin" &&
+        (await controller.getUsernameFromToken(req.query.token.toString())) !==
+          username)
+    ) {
+      res.status(403).send();
+      return;
+    }
+    const include_deleted =
+      (await controller.getRoleFromToken(req.query.token.toString())) ===
+        "admin" && Boolean(req.query.include_deleted);
+    const user = await controller.getUserByName(username, include_deleted);
     if (user !== null) res.status(200).json(user);
     else res.status(404).send();
   });
 
   app.post("/users", async (req, res) => {
-    const user = plainToClass(UserCreation, req.body);
-    validate(user).then(async (errors) => {
-      if (errors.length > 0) {
-        let errorTexts = Array();
-        for (const errorItem of errors) {
-          errorTexts = errorTexts.concat(errorItem.constraints);
-        }
-        res.status(400).send(errorTexts.map(Object.values).flat());
-        return;
-      } else {
-        res.status(201).json(await controller.createUser(user));
-      }
-    });
+    try {
+      const userCreation = UserCreation.check(req.body);
+      const token = await controller.createUser(userCreation);
+      if (token !== "") res.status(201).send(token);
+      res.status(422).send();
+    } catch (err) {
+      res.status(400).send(err.details);
+    }
   });
 
   app.delete("/users/:name", async (req, res) => {
+    if (
+      req.query.token === undefined ||
+      (await controller.getRoleFromToken(req.query.token.toString())) !==
+        "admin"
+    ) {
+      res.status(403).send();
+      return;
+    }
     const username = req.params.name;
-    const user = await controller.deleteUserByName(username);
-    if (user !== null) res.status(200).json(user);
-    else res.status(404).send();
+    const user = await controller.getUserByName(username);
+    if (user !== null) {
+      await controller.deleteUserByName(username);
+      res.status(200).json(user);
+    } else res.status(404).send();
   });
 
   app.put("/users/:name", async (req, res) => {
     const username = req.params.name;
+    if (
+      req.query.token === undefined ||
+      (await controller.getUsernameFromToken(req.query.token.toString())) !==
+        username
+    ) {
+      res.status(403).send();
+      return;
+    }
     const toUpdate: any = {};
     if (req.body.email) toUpdate.email = req.body.email;
     if (req.body.role) toUpdate.role = req.body.role;
