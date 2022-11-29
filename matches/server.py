@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 
-from routers import match
+from routers import matches, invites
 from errors import NotFound
 
 matches = FastAPI(
@@ -9,7 +9,8 @@ matches = FastAPI(
     version='0.1.0',
 )
 
-matches.include_router(match.router)
+matches.include_router(matches.router)
+matches.include_router(invites.router)
 
 
 @matches.get('/')

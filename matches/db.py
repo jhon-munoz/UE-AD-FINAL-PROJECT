@@ -1,4 +1,4 @@
-from pymongo import MongoClient, ASCENDING
+from pymongo import MongoClient
 from models import Match
 from errors import NotFound
 from bson import ObjectId
@@ -7,12 +7,30 @@ from schemas import serializeDict, serializeList
 client = MongoClient(host='mongo', port=27017)
 client.server_info()
 db = client['matches']
-match_collection = db['match']
-# match_collection.create_index([('id', ASCENDING)], unique=True)
+match_collection = db['matches']
+round_collection = db['rounds']
 
 
-def get_all_match() -> list[Match]:
+def get_all_matches() -> list[Match]:
     return serializeList(match_collection.find())
+
+
+def get_invites_to_player(player: str) -> list[Match]:
+    return [
+        Match(**m) for m in match_collection.find(filter={
+            'invited': player,
+            'status': 'created'
+        })
+    ]
+
+
+def get_open_invites() -> list[Match]:
+    return [
+        Match(**m) for m in match_collection.find(filter={
+            'invited': None,
+            'status': 'created'
+        })
+    ]
 
 
 def get_match(id: str) -> Match:
