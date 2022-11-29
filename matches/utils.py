@@ -23,3 +23,13 @@ def authorize(token: str | None,
         if requester_role != role:
             return False
     return True
+
+
+def get_username(token: str | None) -> str:
+    if token is None:
+        return ''
+    requester_name = re.get(
+        f'{AUTH_URL}/user-context/{token}').json()['username']
+    if requester_name is None:
+        return ''
+    return requester_name

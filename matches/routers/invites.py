@@ -1,9 +1,10 @@
+from datetime import date
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
-from db import get_invites_to_player, get_open_invites
+from db import get_invites_to_player, get_open_invites, get_match, update_match
 from service import add_match_service
 from models import Match, MatchInvite
-from utils import authorize
+from utils import authorize, get_username
 
 router = APIRouter(prefix='/invites')
 
@@ -25,7 +26,22 @@ async def open_invites(token: str | None = None) -> list[Match]:
 
 @router.post('/')
 async def invite(match: MatchInvite, token: str | None = None):
-    if not authorize(token, username=match.creator, role='admin'):
+    if not authorize(token, username=match.creator, role='player'):
         return JSONResponse({}, 401)
     add_match_service(match)
     return JSONResponse("Invite created", 202)
+
+
+@router.post('/{match_id}')
+async def accept_invite(match_id: str, token: str | None = None):
+    match = get_match(match_id)
+    if not authorize(token, username=match.invited, role='player'):
+        return JSONResponse({}, 401)
+    update_match(
+        match_id, {
+            'invited': get_username(token),
+            'status': 'in progress',
+            'round': 1,
+            'started_date': str(date.today()),
+        })
+    return JSONResponse("Invite accepted", 200)

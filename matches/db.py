@@ -3,6 +3,7 @@ from models import Match
 from errors import NotFound
 from bson import ObjectId
 from schemas import serializeDict, serializeList
+from typing import Any
 
 client = MongoClient(host='mongo', port=27017)
 client.server_info()
@@ -44,7 +45,7 @@ def add_match(match: Match) -> None:
     match_collection.insert_one(dict(match))
 
 
-def update_match(id, match: Match) -> None:
+def update_match(id: str, match: Any) -> None:
     match_collection.find_one_and_update({'_id': ObjectId(id)},
                                          {'$set': dict(match)})
 

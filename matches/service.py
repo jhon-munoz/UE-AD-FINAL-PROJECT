@@ -1,12 +1,12 @@
-from models import MatchRequest, Match
+from models import MatchInvite, Match
 from datetime import date
 from db import add_match
 
 
-def add_match_service(match: MatchRequest) -> None:
+def add_match_service(match: MatchInvite) -> None:
     match_in = Match()
-    match_in.player1 = match.player1
-    match_in.player2 = match.player2
+    match_in.created = match.created
+    match_in.invited = match.invited
     match_in.status = 'created'
     match_in.round = 0
     match_in.winner = ''
