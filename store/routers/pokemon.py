@@ -34,7 +34,7 @@ async def get_pokemon_of_user(username: str,
 
 @router.put('/{username}')
 async def put_pokemon(username: str,
-                      pokemon: PokemonAdd | str,
+                      pokemon: str,
                       action: Literal['add', 'remove'],
                       token: str | None = None) -> UserPokemon:
     if not authorize(token, role='admin'):

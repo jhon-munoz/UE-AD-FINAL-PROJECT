@@ -16,6 +16,26 @@ def get_all_matches() -> list[Match]:
     return serializeList(match_collection.find())
 
 
+def get_player_matches(player: str) -> list[Match]:
+    return [
+        Match(**m) for m in match_collection.find(
+            filter={
+                '$and': [
+                    {
+                        '$or': [{
+                            'creator': player
+                        }, {
+                            'invited': player
+                        }]
+                    },
+                    {
+                        'status': 'in progress'
+                    },
+                ]
+            })
+    ]
+
+
 def get_invites_to_player(player: str) -> list[Match]:
     return [
         Match(**m) for m in match_collection.find(filter={

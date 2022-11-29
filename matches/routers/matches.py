@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
-from db import get_match, get_all_matches, update_match, delete_match
+from db import get_match, get_all_matches, get_player_matches, update_match, delete_match
 from models import Match
 from utils import authorize
 
@@ -12,6 +12,14 @@ async def all_matches(token: str | None = None) -> list[Match]:
     if not authorize(token, role='admin'):
         return JSONResponse({}, 401)
     return get_all_matches()
+
+
+@router.get('/{username}')
+async def player_matches(username: str,
+                         token: str | None = None) -> list[Match]:
+    if not authorize(token, role='admin'):
+        return JSONResponse({}, 401)
+    return get_player_matches(username)
 
 
 @router.get('/{id}')
