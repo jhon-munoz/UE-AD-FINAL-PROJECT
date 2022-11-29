@@ -20,7 +20,7 @@ export const register = (app: express.Application) => {
 
   app.get("/users", async (req, res) => {
     if (req.query.token === undefined) {
-      res.status(403).send();
+      res.status(401).send();
       return;
     }
     const include_deleted =
@@ -39,7 +39,7 @@ export const register = (app: express.Application) => {
         (await controller.getUsernameFromToken(req.query.token.toString())) !==
           username)
     ) {
-      res.status(403).send();
+      res.status(401).send();
       return;
     }
     const include_deleted =
@@ -67,7 +67,7 @@ export const register = (app: express.Application) => {
       (await controller.getRoleFromToken(req.query.token.toString())) !==
         "admin"
     ) {
-      res.status(403).send();
+      res.status(401).send();
       return;
     }
     const username = req.params.name;
@@ -85,7 +85,7 @@ export const register = (app: express.Application) => {
       (await controller.getUsernameFromToken(req.query.token.toString())) !==
         username
     ) {
-      res.status(403).send();
+      res.status(401).send();
       return;
     }
     const toUpdate: any = {};
