@@ -10,8 +10,10 @@ db = client['matches']
 match_collection = db['match']
 # match_collection.create_index([('id', ASCENDING)], unique=True)
 
+
 def get_all_match() -> list[Match]:
     return serializeList(match_collection.find())
+
 
 def get_match(id: str) -> Match:
     result = match_collection.find_one({'_id': ObjectId(id)})
@@ -19,15 +21,15 @@ def get_match(id: str) -> Match:
         raise NotFound()
     return serializeDict(result)
 
-def add_match(match: Match)-> None:
+
+def add_match(match: Match) -> None:
     match_collection.insert_one(dict(match))
 
+
 def update_match(id, match: Match) -> None:
-    match_collection.find_one_and_update(
-        {'_id': ObjectId(id)}, {'$set': dict(match)})
+    match_collection.find_one_and_update({'_id': ObjectId(id)},
+                                         {'$set': dict(match)})
+
 
 def delete_match(id):
-    return match_collection.find_one_and_delete(
-        {"_id":ObjectId(id)})
-
-
+    return match_collection.find_one_and_delete({"_id": ObjectId(id)})

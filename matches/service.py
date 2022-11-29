@@ -2,6 +2,7 @@ from models import MatchRequest, Match
 from datetime import date
 from db import add_match
 
+
 def add_match_service(match: MatchRequest) -> None:
     match_in = Match()
     match_in.player1 = match.player1

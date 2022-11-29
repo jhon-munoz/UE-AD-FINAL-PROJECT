@@ -11,9 +11,11 @@ matches = FastAPI(
 
 matches.include_router(match.router)
 
+
 @matches.get('/')
 async def root():
     return {'message': 'Hello World'}
+
 
 @matches.exception_handler(NotFound)
 def not_found_exception_handler(_, __):
